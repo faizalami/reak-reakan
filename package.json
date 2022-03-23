@@ -1,0 +1,9 @@
+{
+  "name": "reak-reakan",
+  "version": "1.0.0",
+  "author": "faizalami",
+  "scripts": {
+    "multi-instance": "node multiple-instances.js",
+    "has-children": "node has-children.js"
+  }
+}
