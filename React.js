@@ -3,7 +3,7 @@ const dispatchers = [];
 class Dispatcher {
   constructor () {
     this.index = 0;
-    this.state = [];
+    this.storage = [];
     this.Component = null;
     this.props = null;
     this.instance = null;
@@ -26,20 +26,30 @@ class Dispatcher {
     this.runJobQueue();
   }
 
-  useState (defaultProp) {
+  useState (defaultState) {
+    // Ambil index storage
     const cachedIndex = this.index;
-    if (this.state[cachedIndex] === undefined) {
-      this.state[cachedIndex] = defaultProp;
+    // kalau store pada index yg didapat adalah undefined (belum ada apa2)
+    // maka akan diset nilai baru dari defaultState
+    if (this.storage[cachedIndex] === undefined) {
+      this.storage[cachedIndex] = defaultState;
     }
 
-    const currentState = this.state[cachedIndex];
+    // Siapkan currentState untuk di-return ke komponen
+    const currentState = this.storage[cachedIndex];
+    // Siapkan currentSetter untuk di-return ke komponen
     const currentSetter = newValue => {
-      if (this.state[cachedIndex] !== newValue) {
-        this.state[cachedIndex] = newValue
+      // jika setter (setNamaState) dipanggil, maka dilakukan pengecekan
+      // jika newValue tidak sama dengan nilai yg ada di storage, maka
+      // akan diset nilai baru dan melakukan re-render
+      if (this.storage[cachedIndex] !== newValue) {
+        this.storage[cachedIndex] = newValue
 
         this.reRender();
       }
     };
+    // index ditambah, jadi jika useState dipanggil lagi, maka akan
+    // state yg baru akan memakai index baru juga
     this.index++;
     return [currentState, currentSetter]
   }
@@ -47,12 +57,12 @@ class Dispatcher {
   useEffect (callback, dependencies) {
     const cachedIndex = this.index;
     const hasChanged = dependencies.some((dependency, depIndex) => {
-      return this.state[cachedIndex] === undefined ||
-        dependency !== this.state[cachedIndex][depIndex]
+      return this.storage[cachedIndex] === undefined ||
+        dependency !== this.storage[cachedIndex][depIndex]
     });
 
-    if (this.state[cachedIndex] === undefined) {
-      this.state[cachedIndex] = dependencies;
+    if (this.storage[cachedIndex] === undefined) {
+      this.storage[cachedIndex] = dependencies;
     }
 
     let cleanUp = null;
@@ -60,7 +70,7 @@ class Dispatcher {
       this.queue.push(() => {
         cleanUp = callback();
       });
-      this.state[cachedIndex] = dependencies;
+      this.storage[cachedIndex] = dependencies;
     }
     this.index++;
     return typeof cleanUp === 'function' ? cleanUp : () => console.log('unsubscribed effect')
@@ -85,15 +95,18 @@ class Dispatcher {
 
 const React = {
   dispatcherIndex: 0,
-  useState: (defaultProp) => {
+  useState: (defaultState) => {
+    // ambil latest dispatcher (indexnya sama seperti yg dipanggil di fungsi render)
     const dispatcher = dispatchers[React.dispatcherIndex];
-    return dispatcher.useState(defaultProp)
+    return dispatcher.useState(defaultState)
   },
   useEffect: (callback, dependencies) => {
+    // ambil latest dispatcher (indexnya sama seperti yg dipanggil di fungsi render)
     const dispatcher = dispatchers[React.dispatcherIndex];
     return dispatcher.useEffect(callback, dependencies)
   },
   render: (Component, props) => {
+    // simpan index dari instance baru dispatcher
     React.dispatcherIndex = dispatchers.length;
 
     dispatchers[React.dispatcherIndex] = new Dispatcher();
@@ -104,7 +117,7 @@ const React = {
   component: (Component, props) => {
     const cachedIndex = React.dispatcherIndex;
     const dispatcher = dispatchers[React.dispatcherIndex];
-    let childIndex = null;
+    let childIndex;
 
     const childComponent = dispatcher.children.find(child => child.component === Component);
     if (!childComponent) {
@@ -126,25 +139,6 @@ const React = {
 
     return dispatchers[childIndex].instance;
   },
-}
-
-const Component = props => {
-  const [count, setCount] = React.useState(0);
-  const [name, setName] = React.useState('Steve');
-
-  const exitThis = React.useEffect(() => {
-    if (name) {
-      console.log('Name changed', name);
-    }
-  }, [name])
-
-  return {
-    type: "div",
-    inner: `${count} ${props.unit} for ${name}`,
-    click: () => setCount(count + 1),
-    personArrived: (person) => setName(person),
-    unsubscribe: () => exitThis()
-  }
 }
 
 module.exports = {
