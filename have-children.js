@@ -26,14 +26,6 @@ const MultiplyNumbers = props => {
   }
 }
 
-const Test = () => {
-  React.useState('test')
-  return {
-    type: "div",
-    inner: `Run Test`,
-  }
-}
-
 const CompositeComponent = () => {
   [count, setCount] = React.useState(0);
   [number1, setNumber1] = React.useState(2);
