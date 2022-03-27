@@ -8,12 +8,12 @@ class Dispatcher {
     this.props = null;
     this.instance = null;
     this.children = [];
-    this.queue = [];
+    this.callbacks = [];
   }
 
-  runJobQueue () {
-    this.queue.forEach(func => func());
-    this.queue = [];
+  runCallbacks () {
+    this.callbacks.forEach(func => func());
+    this.callbacks = [];
   }
 
   newInstance (Component, props) {
@@ -23,7 +23,7 @@ class Dispatcher {
     console.log("Regular Render: ", this.instance.inner, '\n');
     this.renderChildren();
     this.index = 0;
-    this.runJobQueue();
+    this.runCallbacks();
   }
 
   useState (defaultState) {
@@ -48,30 +48,40 @@ class Dispatcher {
         this.reRender();
       }
     };
-    // index ditambah, jadi jika useState dipanggil lagi, maka akan
+    // index ditambah, jadi jika useState / useEffect dipanggil lagi, maka akan
     // state yg baru akan memakai index baru juga
     this.index++;
     return [currentState, currentSetter]
   }
 
   useEffect (callback, dependencies) {
+    // Ambil index storage
     const cachedIndex = this.index;
+    // Deteksi adanya perubahan, karena dependencies adalah array, maka paling tepat
+    // membandingkan dengan Array.some()
     const hasChanged = dependencies.some((dependency, depIndex) => {
+      // kondisinya hanya dengan mengecek apakah storage store pada index yg
+      // didapat adalah undefined atau item dari dependency apakah beda dari
+      // item dependency yg sudah disimpan di storage
       return this.storage[cachedIndex] === undefined ||
         dependency !== this.storage[cachedIndex][depIndex]
     });
 
-    if (this.storage[cachedIndex] === undefined) {
-      this.storage[cachedIndex] = dependencies;
-    }
-
+    // siapkan variable untuk menyimpan fungsi clean-up
+    // https://reactjs.org/docs/hooks-effect.html#example-using-hooks-1
     let cleanUp = null;
+
+    // jika pengecekan diatas dideteksi ada perubahan, maka akan push
+    // fungsi untuk menjalankan callback dari effect pada saat setelah render atau re-render
     if (hasChanged) {
-      this.queue.push(() => {
+      this.callbacks.push(() => {
         cleanUp = callback();
       });
+      // setelah itu dependencies disimpan ke storage
       this.storage[cachedIndex] = dependencies;
     }
+    // index ditambah, jadi jika useState / useEffect dipanggil lagi, maka akan
+    // state yg baru akan memakai index baru juga
     this.index++;
     return typeof cleanUp === 'function' ? cleanUp : () => console.log('unsubscribed effect')
   }
@@ -83,7 +93,7 @@ class Dispatcher {
       this.renderChildren();
     }
     this.index = 0;
-    this.runJobQueue();
+    this.runCallbacks();
   }
 
   renderChildren () {

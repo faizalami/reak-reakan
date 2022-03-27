@@ -4,6 +4,7 @@
   "author": "faizalami",
   "scripts": {
     "multi-instance": "node multiple-instances.js",
-    "have-children": "node have-children.js"
+    "have-children": "node have-children.js",
+    "compare-by-reference": "node compare-by-reference.js"
   }
 }
