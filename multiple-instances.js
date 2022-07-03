@@ -1,59 +1,58 @@
-const { React, dispatchers } = require('./React');
+const { React } = require("./React");
 
-const Component = props => {
+const Component = (props) => {
   const [count, setCount] = React.useState(0);
-  const [name, setName] = React.useState('Steve');
+  const [name, setName] = React.useState("Steve");
 
   const exitThis = React.useEffect(() => {
-    console.log('Name changed', name);
-  }, [name])
-
-  return {
-    type: 'div',
-    inner: `${count} ${props.unit} for ${name}`,
-    click: () => setCount(count + 1),
-    personArrived: (person) => setName(person),
-    unsubscribe: () => exitThis()
-  }
-}
-
-const MultiEffects = props => {
-  const [count, setCount] = React.useState(0);
-  const [name, setName] = React.useState('Steve');
-
-  React.useEffect(() => {
-    console.log('Count or name changed', count, name);
-  }, [count, name]);
-
-  React.useEffect(() => {
-    console.log('Name changed', name);
+    console.log("Name changed", name);
   }, [name]);
 
   return {
-    type: 'div',
+    type: "div",
     inner: `${count} ${props.unit} for ${name}`,
     click: () => setCount(count + 1),
     personArrived: (person) => setName(person),
-  }
-}
+    unsubscribe: () => exitThis(),
+  };
+};
 
+const MultiEffects = (props) => {
+  const [count, setCount] = React.useState(0);
+  const [name, setName] = React.useState("Steve");
 
-React.render(Component, { unit: 'likes' })
-dispatchers[0].instance.click();
-dispatchers[0].instance.click();
-dispatchers[0].instance.personArrived('Peter');
+  React.useEffect(() => {
+    console.log("Count or name changed", count, name);
+  }, [count, name]);
 
-console.log('================================');
+  React.useEffect(() => {
+    console.log("Name changed", name);
+  }, [name]);
 
-React.render(Component, { unit: 'test' })
-dispatchers[1].instance.click();
-dispatchers[1].instance.personArrived('Jono');
-dispatchers[1].instance.click();
-dispatchers[1].instance.unsubscribe();
+  return {
+    type: "div",
+    inner: `${count} ${props.unit} for ${name}`,
+    click: () => setCount(count + 1),
+    personArrived: (person) => setName(person),
+  };
+};
 
-console.log('================================');
+React.render(Component, { unit: "likes" });
+React.providers[Component][0].instance.click();
+React.providers[Component][0].instance.click();
+React.providers[Component][0].instance.personArrived("Peter");
 
-React.render(MultiEffects, { unit: 'multi effects' })
-dispatchers[2].instance.click();
-dispatchers[2].instance.personArrived('Peter');
-dispatchers[2].instance.click();
+console.log("================================");
+
+React.render(Component, { unit: "test" });
+React.providers[Component][1].instance.click();
+React.providers[Component][1].instance.personArrived("Jono");
+React.providers[Component][1].instance.click();
+React.providers[Component][1].instance.unsubscribe();
+
+console.log("================================");
+
+React.render(MultiEffects, { unit: "multi effects" });
+React.providers[MultiEffects][0].instance.click();
+React.providers[MultiEffects][0].instance.personArrived("Peter");
+React.providers[MultiEffects][0].instance.click();
