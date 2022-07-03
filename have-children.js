@@ -9,7 +9,7 @@ const AddNumbers = (props) => {
 
   return {
     type: "div",
-    inner: `${props.number1} + ${props.number2} = ${total}`,
+    inner: `${props.name} : ${props.number1} + ${props.number2} = ${total}`,
   };
 };
 
@@ -22,7 +22,15 @@ const MultiplyNumbers = (props) => {
 
   return {
     type: "div",
-    inner: `${props.number1} * ${props.number2} = ${total}`,
+    inner: `${props.name} : ${props.number1} * ${props.number2} = ${total}`,
+    children: [
+      () =>
+        React.component(AddNumbers, {
+          name: "from multiply",
+          number1: total,
+          number2: props.number1,
+        }),
+    ],
   };
 };
 
@@ -35,11 +43,24 @@ const CompositeComponent = () => {
     type: "div",
     inner: `Add & multiply number ${count}`,
     children: [
-      () => React.component(AddNumbers, { number1: count, number2: number1 }),
       () =>
-        React.component(MultiplyNumbers, { number1: count, number2: number2 }),
+        React.component(AddNumbers, {
+          name: "from component",
+          number1: count,
+          number2: number1,
+        }),
       () =>
-        React.component(AddNumbers, { number1: count + 1, number2: number1 }),
+        React.component(MultiplyNumbers, {
+          name: "from component",
+          number1: count,
+          number2: number2,
+        }),
+      () =>
+        React.component(AddNumbers, {
+          name: "from component again",
+          number1: count + 1,
+          number2: number1,
+        }),
     ],
     click: () => setCount(count + 1),
   };
