@@ -36,7 +36,8 @@ class Provider {
 
   renderChildren() {
     if (this.instance?.children?.length) {
-      Object.values(this.children).forEach((child) => (child.index = 0));
+      // Reset semua child.nextIndex ke 0 tiap re-render
+      Object.values(this.children).forEach((child) => (child.nextIndex = 0));
       this.instance.children.forEach((child) => child());
     }
   }
@@ -107,46 +108,58 @@ const React = {
       ? cleanUp
       : () => console.log("unsubscribed effect");
   },
-  render: (Component, props) => {
-    if (React.providers[Component]?.[0]) {
+  render(Component, props) {
+    // Buat instance dari provider dan simpan ke daftar provider
+    if (React.providers[Component]?.length) {
       React.providers[Component].push(new Provider());
     } else {
       React.providers[Component] = [new Provider()];
     }
     const currentIndex = React.providers[Component].length - 1;
     React.activeProvider = React.providers[Component][currentIndex];
+    // Buat instance dari komponen pada provider yang berjalan
     React.activeProvider.newInstance(Component, props);
 
     return React.activeProvider.instance;
   },
-  component: (Component, props) => {
+  component(Component, props) {
     if (!React.activeProvider) {
       console.error("don't have parent");
       return;
     }
 
+    // Simpan provider parent yang sedang berjalan ke variable temporary
     const parentProvider = React.activeProvider;
     let childProvider;
     if (React.activeProvider.children[Component]?.instances?.length) {
-      const childIndex = React.activeProvider.children[Component].index;
+      // Index digunakan untuk mensupport 2 atau lebih komponen child
+      // dari komponen yang sama
+      const childIndex = React.activeProvider.children[Component].nextIndex;
       childProvider =
         React.activeProvider.children[Component].instances[childIndex];
+      // Jika tidak ada instance di index yang dituju berarti ada child
+      // baru dari komponen yang sama
       if (!childProvider) {
         React.activeProvider.children[Component].instances[childIndex] =
           new Provider();
         childProvider =
           React.activeProvider.children[Component].instances[childIndex];
       }
-      React.activeProvider.children[Component].index += 1;
+      React.activeProvider.children[Component].nextIndex += 1;
     } else {
       React.activeProvider.children[Component] = {
         instances: [new Provider()],
-        index: 1,
+        nextIndex: 1,
       };
       childProvider = React.activeProvider.children[Component].instances[0];
     }
+
+    // Buat active provider menyimpan child provider, agar hooks dari
+    // komponen child mengakses storage dari provider child
     React.activeProvider = childProvider;
+    // Buat instance dari komponen child pada provider yang berjalan
     childProvider.newInstance(Component, props);
+    // Kembalikan active provider menjadi parent provider
     React.activeProvider = parentProvider;
 
     return childProvider.instance;
