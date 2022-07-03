@@ -24,9 +24,9 @@ const NotChangeReference = () => {
 };
 
 React.render(NotChangeReference);
-React.providers[NotChangeReference][0].instance.click();
-React.providers[NotChangeReference][0].instance.click();
-React.providers[NotChangeReference][0].instance.personArrived("Peter");
+React.dispatchers[NotChangeReference][0].instance.click();
+React.dispatchers[NotChangeReference][0].instance.click();
+React.dispatchers[NotChangeReference][0].instance.personArrived("Peter");
 
 const ChangeReference = () => {
   const [obj, setObj] = React.useState({ count: 0, name: "Steve" });
@@ -46,6 +46,6 @@ const ChangeReference = () => {
 console.log("================================");
 
 React.render(ChangeReference);
-React.providers[ChangeReference][0].instance.click();
-React.providers[ChangeReference][0].instance.click();
-React.providers[ChangeReference][0].instance.personArrived("Peter");
+React.dispatchers[ChangeReference][0].instance.click();
+React.dispatchers[ChangeReference][0].instance.click();
+React.dispatchers[ChangeReference][0].instance.personArrived("Peter");

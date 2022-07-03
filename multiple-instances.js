@@ -38,21 +38,21 @@ const MultiEffects = (props) => {
 };
 
 React.render(Component, { unit: "likes" });
-React.providers[Component][0].instance.click();
-React.providers[Component][0].instance.click();
-React.providers[Component][0].instance.personArrived("Peter");
+React.dispatchers[Component][0].instance.click();
+React.dispatchers[Component][0].instance.click();
+React.dispatchers[Component][0].instance.personArrived("Peter");
 
 console.log("================================");
 
 React.render(Component, { unit: "test" });
-React.providers[Component][1].instance.click();
-React.providers[Component][1].instance.personArrived("Jono");
-React.providers[Component][1].instance.click();
-React.providers[Component][1].instance.unsubscribe();
+React.dispatchers[Component][1].instance.click();
+React.dispatchers[Component][1].instance.personArrived("Jono");
+React.dispatchers[Component][1].instance.click();
+React.dispatchers[Component][1].instance.unsubscribe();
 
 console.log("================================");
 
 React.render(MultiEffects, { unit: "multi effects" });
-React.providers[MultiEffects][0].instance.click();
-React.providers[MultiEffects][0].instance.personArrived("Peter");
-React.providers[MultiEffects][0].instance.click();
+React.dispatchers[MultiEffects][0].instance.click();
+React.dispatchers[MultiEffects][0].instance.personArrived("Peter");
+React.dispatchers[MultiEffects][0].instance.click();

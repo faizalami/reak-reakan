@@ -69,8 +69,8 @@ const CompositeComponent = () => {
 console.log("================================");
 React.render(CompositeComponent);
 console.log("================================");
-React.providers[CompositeComponent][0].instance.click();
+React.dispatchers[CompositeComponent][0].instance.click();
 console.log("================================");
-React.providers[CompositeComponent][0].instance.click();
+React.dispatchers[CompositeComponent][0].instance.click();
 console.log("================================");
-React.providers[CompositeComponent][0].instance.click();
+React.dispatchers[CompositeComponent][0].instance.click();
