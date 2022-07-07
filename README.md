@@ -90,7 +90,7 @@ const React = {
   dispatchers: {},
   activeDispatcher: null,
   useStorage: () => {
-  	return React.activeDispatcher.storage;
+    return React.activeDispatcher.storage;
   },
   render: (Component, props) => {
     // Mencari / buat instance baru Dispatcher.
