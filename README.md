@@ -80,34 +80,34 @@ dan konsep Hooks yang dapat saya ambil dari dokumentasi dan source code dari Rea
 Sederhananya dapat diilustrasikan seperti ini:
 ```js
 class Dispatcher {
-	constructor() {
+  constructor() {
     // Storage dari hooks.
-  	this.storage = [];
+    this.storage = [];
   }
 }
 
 const React = {
-	dispatchers: {},
+  dispatchers: {},
   activeDispatcher: null,
   useStorage: () => {
   	return React.activeDispatcher.storage;
   },
   render: (Component, props) => {
     // Mencari / buat instance baru Dispatcher.
-  	React.dispatchers[Component] = React.dispatchers[Component] || new Dispatcher();
+    React.dispatchers[Component] = React.dispatchers[Component] || new Dispatcher();
     React.activeDispatcher = React.dispatchers[Component];
     Component(props);
   }
 }
 
 function ReactComponent (props) {
-	const storage = React.useStorage();
+  const storage = React.useStorage();
   storage.push(props.number);
   console.log(storage);
 }
 
 function OtherComponent (props) {
-	const storage = React.useStorage();
+  const storage = React.useStorage();
   storage.push(props.letter);
   console.log(storage);
 }
