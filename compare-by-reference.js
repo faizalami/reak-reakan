@@ -7,6 +7,23 @@ const NotChangeReference = () => {
     console.log("object changed", obj);
   }, [obj]);
 
+  /**
+   * return (
+   *  <div
+   *    onClick={() => {
+   *      const temp = obj;
+   *      temp.count++;
+   *      setObj(temp);
+   *    }}
+   *    onPersonArrived={(person) => {
+   *      const temp = obj;
+   *      temp.name = person;
+   *      setObj(temp);
+   *    }}>
+   *    {`${obj.count} = ${obj.name}`}
+   *  </div>
+   * )
+   */
   return {
     type: "div",
     inner: `${obj.count} = ${obj.name}`,
@@ -35,6 +52,13 @@ const ChangeReference = () => {
     console.log("object changed", obj);
   }, [obj]);
 
+  /**
+   * return (
+   *  <div onClick={() => setObj({ ...obj, count: obj.count + 1 })} onPersonArrived={(person) => setObj({ ...obj, name: person })}>
+   *    {`${obj.count} = ${obj.name}`}
+   *  </div>
+   * )
+   */
   return {
     type: "div",
     inner: `${obj.count} = ${obj.name}`,

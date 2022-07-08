@@ -8,6 +8,13 @@ const Component = (props) => {
     console.log("Name changed", name);
   }, [name]);
 
+  /**
+   * return (
+   *  <div onClick={() => setCount(count + 1)} onPersonArrived={(person) => setName(person)}>
+   *    {`${count} ${props.unit} for ${name}`}
+   *  </div>
+   * )
+   */
   return {
     type: "div",
     inner: `${count} ${props.unit} for ${name}`,
@@ -29,6 +36,13 @@ const MultiEffects = (props) => {
     console.log("Name changed", name);
   }, [name]);
 
+  /**
+   * return (
+   *  <div onClick={() => setCount(count + 1)} onPersonArrived={(person) => setName(person)}>
+   *    {`${count} ${props.unit} for ${name}`}
+   *  </div>
+   * )
+   */
   return {
     type: "div",
     inner: `${count} ${props.unit} for ${name}`,
