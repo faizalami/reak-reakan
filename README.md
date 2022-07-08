@@ -130,3 +130,11 @@ akan membuat masing2 1 instance dari `Dispatcher`. Terus kalau komponen di-rende
 `Dispatcher` yang udah ada. Tiap render/re-render, instance `Dispatcher` yang dibuat/dipanggil, akan disimpan
 di `React.activeDispatcher`, jadi saat di dalam komponen memanggil hooks (`useStorage`), hooks itu akan dapat
 `storage` dari instance `Dispatcher` yang benar sesuai komponennya.
+
+## Running kodenya
+
+```bash
+$ node multiple-instances.js
+$ node have-children.js
+$ node compare-by-reference.js
+```
