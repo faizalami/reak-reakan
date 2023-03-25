@@ -18,7 +18,7 @@ class Dispatcher {
     this.Component = Component;
     this.props = props;
     this.instance = Component(props);
-    console.log("Regular Render: ", this.instance.inner, "\n");
+    console.log('\x1b[96mRegular Render:\x1b[0m', this.instance.inner, '\n');
     this.renderChildren();
     this.index = 0;
     this.runCallbacks();
@@ -27,7 +27,7 @@ class Dispatcher {
   reRender() {
     if (this.Component) {
       this.instance = this.Component(this.props);
-      console.log("Re Render To: ", this.instance.inner, "\n");
+      console.log('\x1b[92mRe Render To:\x1b[0m', this.instance.inner, '\n');
       this.renderChildren();
     }
     this.index = 0;
@@ -104,9 +104,9 @@ const React = {
     // index ditambah, jadi jika useState / useEffect dipanggil lagi, maka akan
     // state yg baru akan memakai index baru juga
     React.activeDispatcher.index++;
-    return typeof cleanUp === "function"
+    return typeof cleanUp === 'function'
       ? cleanUp
-      : () => console.log("unsubscribed effect");
+      : () => console.log('unsubscribed effect');
   },
   render(Component, props) {
     // Buat instance dari dispatcher dan simpan ke daftar dispatcher

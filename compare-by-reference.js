@@ -1,10 +1,10 @@
-const { React } = require("./React");
+const { React } = require('./React');
 
 const NotChangeReference = () => {
-  const [obj, setObj] = React.useState({ count: 0, name: "Steve" });
+  const [obj, setObj] = React.useState({ count: 0, name: 'Steve' });
 
   React.useEffect(() => {
-    console.log("object changed", obj);
+    console.log('object changed', obj);
   }, [obj]);
 
   /**
@@ -25,7 +25,7 @@ const NotChangeReference = () => {
    * )
    */
   return {
-    type: "div",
+    type: 'div',
     inner: `${obj.count} = ${obj.name}`,
     click: () => {
       const temp = obj;
@@ -43,13 +43,13 @@ const NotChangeReference = () => {
 React.render(NotChangeReference);
 React.dispatchers[NotChangeReference][0].instance.click();
 React.dispatchers[NotChangeReference][0].instance.click();
-React.dispatchers[NotChangeReference][0].instance.personArrived("Peter");
+React.dispatchers[NotChangeReference][0].instance.personArrived('Peter');
 
 const ChangeReference = () => {
-  const [obj, setObj] = React.useState({ count: 0, name: "Steve" });
+  const [obj, setObj] = React.useState({ count: 0, name: 'Steve' });
 
   React.useEffect(() => {
-    console.log("object changed", obj);
+    console.log('object changed', obj);
   }, [obj]);
 
   /**
@@ -60,16 +60,16 @@ const ChangeReference = () => {
    * )
    */
   return {
-    type: "div",
+    type: 'div',
     inner: `${obj.count} = ${obj.name}`,
     click: () => setObj({ ...obj, count: obj.count + 1 }),
     personArrived: (person) => setObj({ ...obj, name: person }),
   };
 };
 
-console.log("================================");
+console.log('================================');
 
 React.render(ChangeReference);
 React.dispatchers[ChangeReference][0].instance.click();
 React.dispatchers[ChangeReference][0].instance.click();
-React.dispatchers[ChangeReference][0].instance.personArrived("Peter");
+React.dispatchers[ChangeReference][0].instance.personArrived('Peter');

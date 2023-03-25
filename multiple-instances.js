@@ -1,11 +1,11 @@
-const { React } = require("./React");
+const { React } = require('./React');
 
 const Component = (props) => {
   const [count, setCount] = React.useState(0);
-  const [name, setName] = React.useState("Steve");
+  const [name, setName] = React.useState('Steve');
 
   const exitThis = React.useEffect(() => {
-    console.log("Name changed", name);
+    console.log('Name changed', name);
   }, [name]);
 
   /**
@@ -16,7 +16,7 @@ const Component = (props) => {
    * )
    */
   return {
-    type: "div",
+    type: 'div',
     inner: `${count} ${props.unit} for ${name}`,
     click: () => setCount(count + 1),
     personArrived: (person) => setName(person),
@@ -26,14 +26,14 @@ const Component = (props) => {
 
 const MultiEffects = (props) => {
   const [count, setCount] = React.useState(0);
-  const [name, setName] = React.useState("Steve");
+  const [name, setName] = React.useState('Steve');
 
   React.useEffect(() => {
-    console.log("Count or name changed", count, name);
+    console.log('Count or name changed', count, name);
   }, [count, name]);
 
   React.useEffect(() => {
-    console.log("Name changed", name);
+    console.log('Name changed', name);
   }, [name]);
 
   /**
@@ -44,29 +44,29 @@ const MultiEffects = (props) => {
    * )
    */
   return {
-    type: "div",
+    type: 'div',
     inner: `${count} ${props.unit} for ${name}`,
     click: () => setCount(count + 1),
     personArrived: (person) => setName(person),
   };
 };
 
-React.render(Component, { unit: "likes" });
+React.render(Component, { unit: 'likes' });
 React.dispatchers[Component][0].instance.click();
 React.dispatchers[Component][0].instance.click();
-React.dispatchers[Component][0].instance.personArrived("Peter");
+React.dispatchers[Component][0].instance.personArrived('Peter');
 
-console.log("================================");
+console.log('================================');
 
-React.render(Component, { unit: "test" });
+React.render(Component, { unit: 'test' });
 React.dispatchers[Component][1].instance.click();
-React.dispatchers[Component][1].instance.personArrived("Jono");
+React.dispatchers[Component][1].instance.personArrived('Jono');
 React.dispatchers[Component][1].instance.click();
 React.dispatchers[Component][1].instance.unsubscribe();
 
-console.log("================================");
+console.log('================================');
 
-React.render(MultiEffects, { unit: "multi effects" });
+React.render(MultiEffects, { unit: 'multi effects' });
 React.dispatchers[MultiEffects][0].instance.click();
-React.dispatchers[MultiEffects][0].instance.personArrived("Peter");
+React.dispatchers[MultiEffects][0].instance.personArrived('Peter');
 React.dispatchers[MultiEffects][0].instance.click();
